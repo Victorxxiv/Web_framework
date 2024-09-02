@@ -1,5 +1,5 @@
 from typing import Any
-from flask import Flask, g, current_app, request, jsonify
+from flask import Flask, g, current_app, request, jsonify, url_for, redirect, make_response
 from werkzeug.routing import BaseConverter
 
 # Create a Flask app
@@ -35,6 +35,23 @@ def show_user_profile(user_id):
 def show_items(items):
     return f'Items: {items}'
 
+# Building with url_for
+@app.route('/')
+def home():
+    return redirect(url_for('show_user_profile', user_id=42))
+
+# Using request attributes
+@app.route('/data', methods=['POST'])
+def handle_data():
+    json_data = request.json
+    return {'received': json_data}
+
+# Customization of response
+@app.route('/cookie')
+def set_cookie():
+    resp = make_response('Setting a cookie!')
+    resp.set_cookie('flask_cookie', 'cookie_value')
+    return resp
 
 
 
