@@ -1,6 +1,10 @@
 from typing import Any
-from flask import Flask, g, current_app, request, jsonify, url_for, redirect, make_response
+from flask import Flask, g, current_app, request, jsonify, url_for, redirect
+from flask import Flask, make_response, render_template
 from werkzeug.routing import BaseConverter
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, PasswordField 
+from wtforms.validators import DataRequired
 
 # Create a Flask app
 app = Flask(__name__)
@@ -14,6 +18,11 @@ class ListConverter(BaseConverter):
         return ','.join(BaseConverter.to_url(value) for value in values)
 
 app.url_map.converters['list'] = ListConverter
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Pasword', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
 # Set a global user for current request
 @app.before_request
@@ -52,6 +61,13 @@ def set_cookie():
     resp = make_response('Setting a cookie!')
     resp.set_cookie('flask_cookie', 'cookie_value')
     return resp
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        return f'Welcome, {form.username.data}!'
+    return render_template('login.html', form=form)
 
 
 
