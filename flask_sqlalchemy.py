@@ -17,6 +17,9 @@ class User(Base):
     fullname = Column(String)
     nickname = Column(String)
 
+    addresses = relationship("Address", back_populates="user",
+                             cascade="all, delete, delete-orphan")
+
 # Define a __repr__ method for the User class
     def __repr__(self):
         return "<User(name='%s', fullname='%s', nickname='%s')>" % (
