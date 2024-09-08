@@ -24,6 +24,13 @@ def main(request):
     return HttpResponse(template.render())
 
 def testing(request):
+    template = loader.get_template('myglobal.html')
+    context = {
+        'fruits': ['Apple', 'Banana', 'Cherry'],
+    }
+    return HttpResponse(template.render(context, request))
+
+# def testing(request):
     template = loader.get_template('static.html')
     context = {
         'fruits': ['Apple', 'Banana', 'Cherry'],
